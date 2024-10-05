@@ -15,9 +15,12 @@ cenv/              # Change this to the name of your virtual environment if diff
 *.py[cod]
 *.sqlite3
 
-# Migrations
-your_app/migrations/*.py
-your_app/migrations/__pycache__/
+# Ignore all migration files
+*/migrations/*
+!*/migrations/__init__.py  # Allow __init__.py files in migration 
+/migrations/*
+*/migrations/*.py
+*/migrations/*.pyc
 
 # Static files
 staticfiles/
