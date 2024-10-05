@@ -10,25 +10,27 @@ def home(request):
 def conf_settings(request):
     return render(request, 'settings.html')
 
-# Create and list Substrates
 def create_substrate(request):
     if request.method == 'POST':
         form = SubstrateForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('substrate_list')
+            substrate = form.save(commit=False)  # Don't save yet
+            substrate.status = True  # Set the status to True
+            substrate.save()  # Now save the substrate
+            messages.success(request, 'Substrate created successfully!')  # Add a success message
+            return redirect('substrate_list')  # Redirect to the list view after successful save
     else:
-        form = SubstrateForm()
-    
-    return render(request, 'sub.html', {'form': form})
+        form = SubstrateForm()  # Create a new form instance for GET requests
+
+    return render(request, 'sub.html', {'form': form})  # Render the form in the template
 
 def substrate_list(request):
-    substrates = Substrate.objects.filter(status=True)  # List only active substrates
+    substrates = Substrate.objects.all()
     return render(request, 'sub.html', {'substrates': substrates})
 
 # Update Substrate
-def update_substrate(request, pk):
-    substrate = Substrate.objects.get(pk=pk)
+def update_substrate(request, id):
+    substrate = Substrate.objects.get(id=id)
     
     if request.method == 'POST':
         form = SubstrateForm(request.POST, instance=substrate)
@@ -42,19 +44,22 @@ def update_substrate(request, pk):
 
 # Create and list SubstrateSizes
 def create_substrate_size(request):
+    print(request)
     if request.method == 'POST':
         form = SubstrateSizeForm(request.POST)
         if form.is_valid():
-            form.save()
+            substrate_size = form.save(commit=False)  # Don't save yet
+            substrate_size.status = True  # Set the status to True
+            substrate_size.save()
             return redirect('substrate_size_list')
     else:
         form = SubstrateSizeForm()
     
-    return render(request, 'sub_sizes.html', {'form': form})
+    return render(request, 'subsizes.html', {'form': form})
 
 def substrate_size_list(request):
-    sizes = SubstrateSize.objects.filter(status=True)  # List only active sizes
-    return render(request, 'sub_sizes.html', {'sizes': sizes})
+    sizes = SubstrateSize.objects.all()
+    return render(request, 'subsizes.html', {'sizes': sizes})
 
 # Update SubstrateSize
 def update_substrate_size(request, pk):
@@ -75,16 +80,18 @@ def create_substrate_thickness(request):
     if request.method == 'POST':
         form = SubstrateThicknessForm(request.POST)
         if form.is_valid():
-            form.save()
+            substrate_thickness = form.save(commit=False)  # Don't save yet
+            substrate_thickness.status = True  # Set the status to True
+            substrate_thickness.save()
             return redirect('substrate_thickness_list')
     else:
         form = SubstrateThicknessForm()
     
-    return render(request, 'create_substrate_thickness.html', {'form': form})
+    return render(request, 'gsm.html', {'form': form})
 
 def substrate_thickness_list(request):
-    thicknesses = SubstrateThickness.objects.filter(status=True)  # List only active thicknesses
-    return render(request, 'substrate_thickness_list.html', {'thicknesses': thicknesses})
+    thicknesses = SubstrateThickness.objects.all() 
+    return render(request, 'gsm.html', {'thicknesses': thicknesses})
 
 
 # Update SubstrateThickness
@@ -146,8 +153,8 @@ def product_size_create(request):
     return render(request, 'product/product_size_form.html', {'form': form})
 
 # Product Size Update View
-def product_size_update(request, pk):
-    size = get_object_or_404(ProductSize, pk=pk)
+def product_size_update(request, id):
+    size = get_object_or_404(ProductSize, id=id)
     if request.method == 'POST':
         form = ProductSizeForm(request.POST, instance=size)
         if form.is_valid():

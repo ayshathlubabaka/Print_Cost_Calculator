@@ -21,8 +21,8 @@ class Substrate(models.Model):
 
 
 class SubstrateSize(models.Model):
-    width = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Width (cm)"))
-    height = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Height (cm)"))
+    width = models.PositiveIntegerField(verbose_name=_("Width (cm)"))
+    height = models.PositiveIntegerField(verbose_name=_("Height (cm)"))
     status = models.BooleanField(default=True, verbose_name=_("Status"))  # Active or Inactive
 
     def __str__(self):
@@ -30,7 +30,7 @@ class SubstrateSize(models.Model):
 
 
 class SubstrateThickness(models.Model):
-    value = models.DecimalField(max_digits=10, decimal_places=2)  # Store thickness value with precision
+    value = models.PositiveIntegerField(verbose_name=_("Thickness (gsm)"))  # Store thickness value with precision
     status = models.BooleanField(default=True)  # Status: True for active, False for inactive
 
     def __str__(self):

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Substrate, SubstrateSize, SubstrateThickness
+from .models import *
 
 class SubstrateForm(forms.ModelForm):
     class Meta:
@@ -15,10 +15,6 @@ class SubstrateThicknessForm(forms.ModelForm):
     class Meta:
         model = SubstrateThickness
         fields = ['value', 'status']  # Include status field to allow editing
-
-# forms.py
-from django import forms
-from .models import Product, ProductSize, ProductConfiguration
 
 # Product Form
 class ProductForm(forms.ModelForm):
