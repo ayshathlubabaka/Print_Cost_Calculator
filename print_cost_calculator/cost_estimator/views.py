@@ -108,6 +108,36 @@ def update_substrate_thickness(request, pk):
     
     return render(request, 'update_substrate_thickness.html', {'form': form})
 
+def create_paper_specification(request):
+    if request.method == 'POST':
+        form = PaperSpecificationForm(request.POST)
+        if form.is_valid():
+            paper_specification = form.save(commit=False)  # Don't save yet
+            paper_specification.status = True  # Set the status to True
+            paper_specification.save()  # Save the model instance
+            return redirect('paper_specification_list')  # Redirect to the list view after successful save
+    else:
+        form = PaperSpecificationForm()  # Create a new form instance for GET requests
+
+    return render(request, 'paper_sizes.html', {'form': form})  # Render the form in the template
+
+def paper_specification_list(request):
+    paper_specifications = PaperSpecification.objects.all()  # Retrieve all paper specifications
+    return render(request, 'papersizes.html', {'paper_specifications': paper_specifications})  # Render the list in the template
+
+def update_paper_specification(request, pk):
+    paper_specification = get_object_or_404(PaperSpecification, pk=pk)  # Retrieve the specific instance
+    
+    if request.method == 'POST':
+        form = PaperSpecificationForm(request.POST, instance=paper_specification)  # Bind the form with the instance
+        if form.is_valid():
+            form.save()  # Save the updated instance
+            return redirect('paper_specification_list')  # Redirect to the list view after update
+    else:
+        form = PaperSpecificationForm(instance=paper_specification)  # Create a form instance with existing data
+
+    return render(request, 'update_paper_specification.html', {'form': form})  # Render the update form
+
 # Product List View
 def product_list(request):
     products = Product.objects.all()

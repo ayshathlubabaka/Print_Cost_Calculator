@@ -16,6 +16,11 @@ class SubstrateThicknessForm(forms.ModelForm):
         model = SubstrateThickness
         fields = ['value', 'status']  # Include status field to allow editing
 
+class PaperSpecificationForm(forms.ModelForm):
+    class Meta:
+        model = PaperSpecification
+        fields = ['name', 'status']
+
 # Product Form
 class ProductForm(forms.ModelForm):
     class Meta:
