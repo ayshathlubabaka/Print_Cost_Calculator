@@ -17,10 +17,8 @@ cenv/              # Change this to the name of your virtual environment if diff
 
 # Ignore all migration files
 */migrations/*
-!*/migrations/__init__.py  # Allow __init__.py files in migration 
-/migrations/*
-*/migrations/*.py
-*/migrations/*.pyc
+!*/migrations/__init__.py  # Allow __init__.py files in migration folders
+
 
 # Static files
 staticfiles/

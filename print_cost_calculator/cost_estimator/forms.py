@@ -1,22 +1,39 @@
 from django import forms
-from .models import Product, ProductSize, PaperSpecification, PaperConfiguration
+from .models import Substrate, SubstrateSize, SubstrateThickness
 
+class SubstrateForm(forms.ModelForm):
+    class Meta:
+        model = Substrate
+        fields = ['name', 'uom', 'status']  # Include status field to allow editing
+
+class SubstrateSizeForm(forms.ModelForm):
+    class Meta:
+        model = SubstrateSize
+        fields = ['width', 'height', 'status']  # Include status field to allow editing
+
+class SubstrateThicknessForm(forms.ModelForm):
+    class Meta:
+        model = SubstrateThickness
+        fields = ['value', 'status']  # Include status field to allow editing
+
+# forms.py
+from django import forms
+from .models import Product, ProductSize, ProductConfiguration
+
+# Product Form
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = '__all__'  
+        fields = ['name', 'uom', 'status']
 
+# Product Size Form
 class ProductSizeForm(forms.ModelForm):
     class Meta:
         model = ProductSize
-        fields = '__all__'  
+        fields = ['width', 'height', 'status']
 
-class PaperSpecificationForm(forms.ModelForm):
+# Product Configuration Form
+class ProductConfigurationForm(forms.ModelForm):
     class Meta:
-        model = PaperSpecification
-        fields = '__all__' 
-
-class PaperConfigurationForm(forms.ModelForm):
-    class Meta:
-        model = PaperConfiguration
-        fields = '__all__'  
+        model = ProductConfiguration
+        fields = ['product', 'uom', 'min_order_quantity', 'sizes']

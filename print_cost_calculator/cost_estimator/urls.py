@@ -4,7 +4,8 @@ from . import views
 urlpatterns = [
     path('',views.home, name='home'),
     path('conf_settings',views.conf_settings, name='conf_settings'),
-    path('product_list/',views.product_list, name='product_list'),
+    path('substrate_list/',views.substrate_list, name='substrate_list'),
+    # path('product_list/',views.product_list, name='product_list'),
     # path('product_create/',views.product_create, name='product_create'),
     # path('product_update/',views.product_update, name='product_update'),
     # path('product_delete/',views.product_delete, name='product_delete'),
