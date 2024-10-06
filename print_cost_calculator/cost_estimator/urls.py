@@ -16,13 +16,14 @@ urlpatterns = [
     path('paper_specification_list/',views.paper_specification_list, name='paper_specification_list'),
     path('create_paper_specification/',views.create_paper_specification, name='create_paper_specification'),
     path('update_paper_specification/',views.update_paper_specification, name='update_paper_specification'),
+    path('product_list/',views.product_list, name='product_list'),
+    path('create_product/',views.create_product, name='create_product'),
+    path('product_size_list/',views.product_size_list, name='product_size_list'),
+    path('create_product_size/',views.create_product_size, name='create_product_size'),
 
-    # path('product_list/',views.product_list, name='product_list'),
-    # path('product_create/',views.product_create, name='product_create'),
     # path('product_update/',views.product_update, name='product_update'),
     # path('product_delete/',views.product_delete, name='product_delete'),
-    # path('product_size_list/',views.product_size_list, name='product_size_list'),
-    # path('product_size_create/',views.product_size_create, name='product_size_create'),
+    
     # path('product_size_update/',views.product_size_update, name='product_size_update'),
     # path('product_size_delete/',views.product_size_delete, name='product_size_delete'),
    

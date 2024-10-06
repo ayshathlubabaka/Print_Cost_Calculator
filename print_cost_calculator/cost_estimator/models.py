@@ -49,8 +49,8 @@ class Product(models.Model):
 
 # Product Size Master
 class ProductSize(models.Model):
-    width = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Width (cm)"))
-    height = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Height (cm)"))
+    width = models.PositiveIntegerField(verbose_name=_("Width (cm)"))
+    height = models.PositiveIntegerField(verbose_name=_("Height (cm)"))
     status = models.BooleanField(default=True, verbose_name=_("Status"))  # Active or Inactive
 
     def __str__(self):

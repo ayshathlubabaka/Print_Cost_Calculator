@@ -141,18 +141,24 @@ def update_paper_specification(request, pk):
 # Product List View
 def product_list(request):
     products = Product.objects.all()
-    return render(request, 'product/product_list.html', {'products': products})
+    return render(request, 'prod.html', {'products': products})
 
-# Product Create View
-def product_create(request):
+# Products Create View
+def create_product(request):
     if request.method == 'POST':
         form = ProductForm(request.POST)
         if form.is_valid():
-            form.save()
+            product = form.save(commit=False)  # Don't save yet
+            product.status = True  # Set the status to True
+            product.save()  # Save the model instance
             return redirect('product_list')  # Redirect to product list after saving
+        else:
+            print(form.errors)
     else:
         form = ProductForm()
-    return render(request, 'product/product_form.html', {'form': form})
+    
+    return render(request, 'prod.html', {'form': form})  # Return the form (with errors if any)
+
 
 # Product Update View
 def product_update(request, pk):
@@ -169,18 +175,20 @@ def product_update(request, pk):
 # Product Size List View
 def product_size_list(request):
     sizes = ProductSize.objects.all()
-    return render(request, 'product/product_size_list.html', {'sizes': sizes})
+    return render(request, 'prosizes.html', {'sizes': sizes})
 
 # Product Size Create View
-def product_size_create(request):
+def create_product_size(request):
     if request.method == 'POST':
         form = ProductSizeForm(request.POST)
         if form.is_valid():
-            form.save()
+            product_size = form.save(commit=False)  # Don't save yet
+            product_size.status = True  # Set the status to True
+            product_size.save()  # Save the model instance
             return redirect('product_size_list')  # Redirect to product size list after saving
     else:
         form = ProductSizeForm()
-    return render(request, 'product/product_size_form.html', {'form': form})
+    return render(request, 'prosizes.html', {'form': form})
 
 # Product Size Update View
 def product_size_update(request, id):

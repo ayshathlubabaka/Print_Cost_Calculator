@@ -276,15 +276,18 @@
 					<label class="form-label">Substrate</label>
 					<input type="text" class="form-control" placeholder="">
 				</div>
-				<div class="mb-3">
+				<!--begin::UOM Input-->
+				<div class="mb-0">
 					<label class="form-label">UoM</label>
-					<select class="form-select" aria-label="Select example">
-						<option>Select UoM</option>
-						<option value="1">No's</option>
-						<option value="2">SqM</option>
-						<option value="3">Roll</option>
+					<select class="form-select" name="uom">
+						<option value="">Select UoM</option> <!-- Add a placeholder option -->
+						<option value="NO">No's</option>
+						<option value="ROLL">Roll</option>
+						<option value="PCS">Pcs</option>
+						<option value="SQM">SqM</option>
 					</select>
 				</div>
+				<!--end::UOM Input-->
 				<div class="form-check form-switch form-check-custom form-check-solid">
 					<input class="form-check-input" type="checkbox" value="" id="flexSwitchChecked" checked="checked" />
 					<label class="form-check-label" for="flexSwitchChecked">
