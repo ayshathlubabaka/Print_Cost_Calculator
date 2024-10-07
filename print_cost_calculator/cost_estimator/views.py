@@ -40,7 +40,23 @@ def update_substrate(request, id):
     else:
         form = SubstrateForm(instance=substrate)
     
-    return render(request, 'sub.html', {'form': form})
+    return render(request, 'sub.html', {'form': form, 's': substrate})
+
+def delete_substrate(request, id):
+    substrate = get_object_or_404(Substrate, id=id)
+    
+    # Check if the substrate is being used in SubstrateConfiguration or any other model
+    is_used_in_config = SubstrateConfiguration.objects.filter(substrate=substrate).exists()
+    
+    if is_used_in_config:
+        # If substrate is used somewhere, don't allow deletion and show a message
+        messages.error(request, 'This substrate is in use and cannot be deleted.')
+        return redirect('substrate_list')  # Redirect to the substrate list or any relevant page
+    else:
+        # If not used, delete the substrate
+        substrate.delete()
+        messages.success(request, 'Substrate deleted successfully.')
+        return redirect('substrate_list')
 
 # Create and list SubstrateSizes
 def create_substrate_size(request):
@@ -62,8 +78,8 @@ def substrate_size_list(request):
     return render(request, 'subsizes.html', {'sizes': sizes})
 
 # Update SubstrateSize
-def update_substrate_size(request, pk):
-    substrate_size = SubstrateSize.objects.get(pk=pk)
+def update_substrate_size(request, id):
+    substrate_size = SubstrateSize.objects.get(id=id)
     
     if request.method == 'POST':
         form = SubstrateSizeForm(request.POST, instance=substrate_size)
@@ -73,8 +89,26 @@ def update_substrate_size(request, pk):
     else:
         form = SubstrateSizeForm(instance=substrate_size)
     
-    return render(request, 'update_substrate_size.html', {'form': form})
+    return render(request, 'update_substrate_size.html', {'form': form, 's' : substrate_size})
 
+
+def delete_substrate_size(request, id):
+    # Fetch the SubstrateSize instance
+    substrate_size = get_object_or_404(SubstrateSize, id=id)
+    
+    # Check if the SubstrateSize is used in SubstrateConfiguration or any other related model
+    is_used_in_config = SubstrateConfiguration.objects.filter(substrate_size=substrate_size).exists()  # Update based on your actual model relations
+
+    if is_used_in_config:
+        # If it's used, don't allow deletion and show an error message
+        messages.error(request, 'This Substrate Size is in use and cannot be deleted.')
+        return redirect('substrate_size_list')  # Redirect to the substrate size list or any relevant page
+    else:
+        # If not used, delete the substrate size
+        substrate_size.delete()
+        messages.success(request, 'Substrate Size deleted successfully.')
+        return redirect('substrate_size_list')  # Redirect after successful deletion
+    
 # Create and list SubstrateThicknesses
 def create_substrate_thickness(request):
     if request.method == 'POST':
@@ -95,8 +129,8 @@ def substrate_thickness_list(request):
 
 
 # Update SubstrateThickness
-def update_substrate_thickness(request, pk):
-    substrate_thickness = SubstrateThickness.objects.get(pk=pk)
+def update_substrate_thickness(request, id):
+    substrate_thickness = SubstrateThickness.objects.get(id=id)
     
     if request.method == 'POST':
         form = SubstrateThicknessForm(request.POST, instance=substrate_thickness)
@@ -107,6 +141,29 @@ def update_substrate_thickness(request, pk):
         form = SubstrateThicknessForm(instance=substrate_thickness)
     
     return render(request, 'update_substrate_thickness.html', {'form': form})
+
+def delete_substrate_thickness(request, id):
+    # Fetch the SubstrateThickness instance
+    substrate_thickness = get_object_or_404(SubstrateThickness, id=id)
+    
+    # Check if the SubstrateThickness is used in SubstrateConfiguration or any other related model
+    is_used_in_config = SubstrateConfiguration.objects.filter(substrate_thickness=substrate_thickness).exists()  # Update based on your actual model relations
+
+    if is_used_in_config:
+        # If it's used, don't allow deletion and show an error message
+        messages.error(request, 'This Substrate Thickness is in use and cannot be deleted.')
+        return redirect('substrate_thickness_list')  # Redirect to the substrate thickness list or any relevant page
+    else:
+        # If not used, delete the substrate thickness
+        substrate_thickness.delete()
+        messages.success(request, 'Substrate Thickness deleted successfully.')
+        return redirect('substrate_thickness_list')  # Redirect after successful deletion
+    
+
+def paper_specification_list(request):
+    paper_specifications = PaperSpecification.objects.all()  # Retrieve all paper specifications
+    return render(request, 'papersizes.html', {'paper_specifications': paper_specifications})  # Render the list in the template
+
 
 def create_paper_specification(request):
     if request.method == 'POST':
@@ -121,12 +178,9 @@ def create_paper_specification(request):
 
     return render(request, 'paper_sizes.html', {'form': form})  # Render the form in the template
 
-def paper_specification_list(request):
-    paper_specifications = PaperSpecification.objects.all()  # Retrieve all paper specifications
-    return render(request, 'papersizes.html', {'paper_specifications': paper_specifications})  # Render the list in the template
 
-def update_paper_specification(request, pk):
-    paper_specification = get_object_or_404(PaperSpecification, pk=pk)  # Retrieve the specific instance
+def update_paper_specification(request, id):
+    paper_specification = get_object_or_404(PaperSpecification, id=id)  # Retrieve the specific instance
     
     if request.method == 'POST':
         form = PaperSpecificationForm(request.POST, instance=paper_specification)  # Bind the form with the instance
@@ -136,7 +190,23 @@ def update_paper_specification(request, pk):
     else:
         form = PaperSpecificationForm(instance=paper_specification)  # Create a form instance with existing data
 
-    return render(request, 'update_paper_specification.html', {'form': form})  # Render the update form
+    return render(request, 'update_paper_specification.html', {'form': form, 'p': paper_specification})  # Render the update form
+
+
+def delete_paper_specification(request, id):
+    paper_specification = get_object_or_404(PaperSpecification, id=id)
+    
+    # Check if the paper specification is used in PaperConfiguration or SubstrateConfiguration
+    is_used_in_paper_config = PaperConfiguration.objects.filter(specification=paper_specification).exists()
+    is_used_in_substrate_config = SubstrateConfiguration.objects.filter(paper_specification=paper_specification).exists()  # Adjust based on actual relations
+
+    if is_used_in_paper_config or is_used_in_substrate_config:
+        messages.error(request, 'This paper specification is in use and cannot be deleted.')
+        return redirect('paper_specification_list')  # Redirect to the paper specification list or any relevant page
+    else:
+        paper_specification.delete()
+        messages.success(request, 'Paper specification deleted successfully.')
+        return redirect('paper_specification_list')  # Redirect after successful deletion
 
 # Product List View
 def product_list(request):
@@ -161,8 +231,8 @@ def create_product(request):
 
 
 # Product Update View
-def product_update(request, pk):
-    product = get_object_or_404(Product, pk=pk)
+def update_product(request, id):
+    product = get_object_or_404(Product, id=id)
     if request.method == 'POST':
         form = ProductForm(request.POST, instance=product)
         if form.is_valid():
@@ -170,7 +240,22 @@ def product_update(request, pk):
             return redirect('product_list')  # Redirect to product list after saving
     else:
         form = ProductForm(instance=product)
-    return render(request, 'product/product_form.html', {'form': form})
+    return render(request, 'prod.html', {'form': form, 'p':product})
+
+def delete_product(request, id):
+    product = get_object_or_404(Product, id=id)
+    
+    # Check if the product is used in ProductConfiguration or PaperConfiguration
+    is_used_in_product_config = ProductConfiguration.objects.filter(product=product).exists()
+    is_used_in_paper_config = PaperConfiguration.objects.filter(product=product).exists()
+
+    if is_used_in_product_config or is_used_in_paper_config:
+        messages.error(request, 'This product is in use and cannot be deleted.')
+        return redirect('product_list')  # Redirect to the product list or any relevant page
+    else:
+        product.delete()
+        messages.success(request, 'Product deleted successfully.')
+        return redirect('product_list')  # Redirect after successful deletion
 
 # Product Size List View
 def product_size_list(request):
@@ -191,7 +276,7 @@ def create_product_size(request):
     return render(request, 'prosizes.html', {'form': form})
 
 # Product Size Update View
-def product_size_update(request, id):
+def update_product_size(request, id):
     size = get_object_or_404(ProductSize, id=id)
     if request.method == 'POST':
         form = ProductSizeForm(request.POST, instance=size)
@@ -200,7 +285,22 @@ def product_size_update(request, id):
             return redirect('product_size_list')  # Redirect to product size list after saving
     else:
         form = ProductSizeForm(instance=size)
-    return render(request, 'product/product_size_form.html', {'form': form})
+    return render(request, 'prosizes.html', {'form': form, 's': size})
+
+def delete_product_size(request, id):
+    product_size = get_object_or_404(ProductSize, id=id)
+    
+    # Check if the product size is used in ProductConfiguration or PaperConfiguration
+    is_used_in_product_config = ProductConfiguration.objects.filter(product_size=product_size).exists()
+    is_used_in_paper_config = PaperConfiguration.objects.filter(product_size=product_size).exists()
+
+    if is_used_in_product_config or is_used_in_paper_config:
+        messages.error(request, 'This product size is in use and cannot be deleted.')
+        return redirect('product_size_list')  # Redirect to the product size list or any relevant page
+    else:
+        product_size.delete()
+        messages.success(request, 'Product size deleted successfully.')
+        return redirect('product_size_list')  # Redirect after successful deletion
 
 # Product Configuration List View
 def product_configuration_list(request):
@@ -271,8 +371,9 @@ def create_product_configuration(request):
 
 
 # Product Configuration Update View
-def product_configuration_update(request, pk):
-    configuration = get_object_or_404(ProductConfiguration, pk=pk)
+def update_product_configuration(request, id):
+    configuration = get_object_or_404(ProductConfiguration, id=id)
+    print(configuration.status)
     if request.method == 'POST':
         form = ProductConfigurationForm(request.POST, instance=configuration)
         if form.is_valid():
@@ -280,7 +381,23 @@ def product_configuration_update(request, pk):
             return redirect('product_configuration_list')  # Redirect to product configuration list after saving
     else:
         form = ProductConfigurationForm(instance=configuration)
-    return render(request, 'product/product_configuration_form.html', {'form': form})
+    return render(request, 'proconf.html', {'form': form, 'c':configuration})
+
+def delete_product_configuration(request, id):
+    product_configuration = get_object_or_404(ProductConfiguration, id=id)
+    
+    # Check if the product configuration is used in any related models (if applicable)
+    # For example, check if it is linked to other configurations or models
+    is_used_in_other_model = False  # Replace with actual checks if needed
+
+    if is_used_in_other_model:
+        messages.error(request, 'This product configuration is in use and cannot be deleted.')
+        return redirect('product_configuration_list')  # Adjust redirect URL as necessary
+    else:
+        product_configuration.delete()
+        messages.success(request, 'Product configuration deleted successfully.')
+        return redirect('product_configuration_list')  # Adjust redirect URL as necessary
+
 
 def paper_configuration_list(request):
     # Get all configurations
@@ -337,6 +454,32 @@ def create_paper_configuration(request):
             'paper_specifications': paper_specifications,
         })
     
+# Product Configuration Update View
+def update_paper_configuration(request, id):
+    configuration = get_object_or_404(PaperConfiguration, id=id)
+    print(configuration.status)
+    if request.method == 'POST':
+        form = PaperConfigurationForm(request.POST, instance=configuration)
+        if form.is_valid():
+            form.save()
+            return redirect('paper_configuration_list')  # Redirect to product configuration list after saving
+    else:
+        form = PaperConfigurationForm(instance=configuration)
+    return render(request, 'paperconf.html', {'form': form, 'c':configuration})
+
+def delete_paper_configuration(request, id):
+    paper_configuration = get_object_or_404(PaperConfiguration, id=id)
+    
+    # Check if the paper configuration is used in any related models
+    is_used_in_paper_specification = False
+
+    if is_used_in_paper_specification:
+        messages.error(request, 'This paper configuration is in use and cannot be deleted.')
+        return redirect('paper_configuration_list')  # Adjust redirect URL as necessary
+    else:
+        paper_configuration.delete()
+        messages.success(request, 'Paper configuration deleted successfully.')
+        return redirect('paper_configuration_list')  # Adjust redirect URL as necessary
 
 def substrate_configuration_list(request):
     # Fetch all substrate configurations
@@ -405,3 +548,29 @@ def create_substrate_configuration(request):
         'substrate_thicknesses': substrate_thicknesses,
         'paper_sizes': paper_sizes,
     })
+
+def update_substrate_configuration(request, id):
+    configuration = get_object_or_404(SubstrateConfiguration, id=id)
+    print(configuration.status)
+    if request.method == 'POST':
+        form = SubstrateConfigurationForm(request.POST, instance=configuration)
+        if form.is_valid():
+            form.save()
+            return redirect('substrate_configuration_list')  # Redirect to product configuration list after saving
+    else:
+        form = PaperConfigurationForm(instance=configuration)
+    return render(request, 'subconf.html', {'form': form, 'config':configuration})
+
+def delete_substrate_configuration(request, id):
+    substrate_configuration = get_object_or_404(SubstrateConfiguration, id=id)
+    
+    # Check if the substrate configuration is used in any related models
+    is_used_in_substrate = False
+
+    if is_used_in_substrate:
+        messages.error(request, 'This substrate configuration is in use and cannot be deleted.')
+        return redirect('substrate_configuration_list')  # Adjust redirect URL as necessary
+    else:
+        substrate_configuration.delete()
+        messages.success(request, 'Substrate configuration deleted successfully.')
+        return redirect('substrate_configuration_list')  # Adjust redirect URL as necessary
