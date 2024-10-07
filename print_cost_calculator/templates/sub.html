@@ -62,7 +62,7 @@
 															<tbody class="fw-semibold text-gray-600">
 																{% for s in substrates %}
 																<tr>
-																	<td>{{s.id}}</td>
+																	<td>{{ forloop.counter }}</td> 
 																	<td>{{s.name}}</td>																			
 																	<td>
 																		{% if s.status %}

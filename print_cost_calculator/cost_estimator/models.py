@@ -63,6 +63,7 @@ class ProductConfiguration(models.Model):
     uom = models.CharField(max_length=10, choices=UOM_CHOICES, verbose_name=_("Unit of Measurement"))
     min_order_quantity = models.PositiveIntegerField(verbose_name=_("Minimum Order Quantity"))
     sizes = models.ManyToManyField(ProductSize, related_name='configurations', verbose_name=_("Product Sizes"))
+    status = models.BooleanField(default=True, verbose_name=_("Status"))  # Active or Inactive
 
     def __str__(self):
         return f'{self.product.name} Config'
@@ -75,42 +76,27 @@ class PaperSpecification(models.Model):
 
     def __str__(self):
         return self.name
+    
 
-
-# Paper Configuration Master
 class PaperConfiguration(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_("Product"))
-    size = models.ForeignKey(ProductSize, on_delete=models.CASCADE, verbose_name=_("Size"))
-
-    def __str__(self):
-        return f'{self.product.name} - {self.size}'
-
-
-# Paper Configuration Detail Master
-class PaperConfigurationDetail(models.Model):
-    configuration = models.ForeignKey(PaperConfiguration, on_delete=models.CASCADE, related_name='details')
-    paper_specifications = models.ManyToManyField(PaperSpecification, verbose_name=_("Paper Specifications"))
-    max_output_quantity = models.PositiveIntegerField(verbose_name=_("Maximum Output Quantity"))
-
-    def __str__(self):
-        return f"Detail for {self.configuration}"
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    size = models.ForeignKey(ProductSize, on_delete=models.CASCADE)
+    paper_specification = models.ForeignKey(PaperSpecification, on_delete=models.CASCADE, blank=True, null=True)
+    max_output_quantity = models.PositiveIntegerField(blank=True, null=True)
+    status = models.BooleanField(default=True, verbose_name=_("Status"))  # Active or Inactive
 
 
 class SubstrateConfiguration(models.Model):
     substrate = models.ForeignKey(Substrate, on_delete=models.CASCADE)
     substrate_size = models.ForeignKey(SubstrateSize, on_delete=models.CASCADE)
     substrate_thickness = models.ForeignKey(SubstrateThickness, on_delete=models.CASCADE)
+    paper_size = models.ForeignKey(PaperSpecification, on_delete=models.CASCADE)
+    cost_per_unit = models.DecimalField(max_digits=10, decimal_places=2)
+    maximum_output = models.PositiveIntegerField()
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.BooleanField(default=True, verbose_name=_("Status"))  # Active or Inactive
 
     def __str__(self):
         return f"{self.substrate.name} - {self.substrate_size.width}x{self.substrate_size.height} cm - {self.substrate_thickness.value} GSM"
 
 
-class SubstrateConfigurationDetail(models.Model):
-    configuration = models.ForeignKey(SubstrateConfiguration, on_delete=models.CASCADE, related_name='details')
-    paper_size = models.ForeignKey(PaperSpecification, on_delete=models.CASCADE)
-    cost_per_unit = models.DecimalField(max_digits=10, decimal_places=2)
-    maximum_output = models.PositiveIntegerField()
-    total = models.DecimalField(max_digits=10, decimal_places=2)
-
-    def __str__(self):
-        return f"Detail for {self.configuration}, Paper Size: {self.paper_size}, Cost: {self.cost_per_unit}, Max Output: {self.maximum_output}"

@@ -62,7 +62,7 @@
 																	<tbody class="fw-semibold text-gray-600">
 																		{% for t in thicknesses %}
 																		<tr>
-																			<td>{{t.id}}</td>
+																			<td>{{ forloop.counter }}</td> 
 																			<td>{{t.value}} GSM</td>																			
 																			<td>
 																				<div class="badge badge-light-success">Active</div>

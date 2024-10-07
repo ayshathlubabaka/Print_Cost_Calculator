@@ -37,4 +37,15 @@ class ProductSizeForm(forms.ModelForm):
 class ProductConfigurationForm(forms.ModelForm):
     class Meta:
         model = ProductConfiguration
-        fields = ['product', 'uom', 'min_order_quantity', 'sizes']
+        fields = ['product', 'uom', 'min_order_quantity', 'sizes', 'status']
+
+# Form for Paper Configuration
+class PaperConfigurationForm(forms.ModelForm):
+    class Meta:
+        model = PaperConfiguration
+        fields = ['product', 'size', 'paper_specification', 'max_output_quantity', 'status']  # Include all fields in the PaperConfiguration model
+
+class SubstrateConfigurationForm(forms.ModelForm):
+    class Meta:
+        model = SubstrateConfiguration
+        fields = ['substrate', 'substrate_size', 'substrate_thickness', 'paper_size', 'cost_per_unit', 'maximum_output', 'total']

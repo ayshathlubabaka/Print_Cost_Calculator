@@ -62,7 +62,7 @@
 																	<tbody class="fw-semibold text-gray-600">
 																		{% for s in sizes %}
 																		<tr>
-																			<td>{{s.id}}</td>
+																			<td>{{ forloop.counter }}</td> 
 																			<td>{{s.width}} x {{s.height}}</td>																			
 																			<td>
 																				{% if s.status %}

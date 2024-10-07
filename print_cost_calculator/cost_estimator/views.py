@@ -205,18 +205,70 @@ def product_size_update(request, id):
 # Product Configuration List View
 def product_configuration_list(request):
     configurations = ProductConfiguration.objects.all()
-    return render(request, 'product/product_configuration_list.html', {'configurations': configurations})
+    products = Product.objects.all()
+    sizes = ProductSize.objects.all()
+    uoms = ProductConfiguration._meta.get_field('uom').choices  # UoM choices from the model field
+    return render(request, 'proconf.html', 
+                  {'configurations': configurations, 
+                   'products': products,
+                    'sizes': sizes,
+                    'uoms': uoms 
+                  })
 
-# Product Configuration Create View
-def product_configuration_create(request):
+def create_product_configuration(request):
     if request.method == 'POST':
-        form = ProductConfigurationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('product_configuration_list')  # Redirect to product configuration list after saving
-    else:
-        form = ProductConfigurationForm()
-    return render(request, 'product/product_configuration_form.html', {'form': form})
+        product_id = request.POST.get('product')
+        uom_value = request.POST.get('uom')  # Get the selected UoM value from the form
+        min_order_quantity = request.POST.get('min_order_quantity')
+        selected_size_ids = request.POST.getlist('sizes')
+
+        if product_id and uom_value and min_order_quantity and selected_size_ids:
+            try:
+                product = Product.objects.get(id=product_id)
+            except Product.DoesNotExist:
+                # Handle case where the product does not exist
+                return render(request, 'proconf.html', {
+                    'error': "Product not found.",
+                    'products': Product.objects.all(),
+                    'sizes': ProductSize.objects.all(),
+                    'uoms': ProductConfiguration._meta.get_field('uom').choices
+                })
+
+            # Create and save the product configuration
+            product_configuration = ProductConfiguration(
+                product=product,
+                uom=uom_value,  # Directly store the UoM as it’s a choice field
+                min_order_quantity=min_order_quantity,
+            )
+            product_configuration.save()
+
+            # Get the selected sizes and assign them
+            sizes = ProductSize.objects.filter(id__in=selected_size_ids)
+            product_configuration.sizes.set(sizes.values_list('id', flat=True))
+
+
+            return redirect('product_configuration_list')
+
+        else:
+            # Handle missing data, re-render the form with an error message
+            return render(request, 'proconf.html', {
+                'error': "All fields are required.",
+                'products': Product.objects.all(),
+                'sizes': ProductSize.objects.all(),
+                'uoms': ProductConfiguration._meta.get_field('uom').choices
+            })
+
+    # Fetch products and sizes for the form if GET request
+    products = Product.objects.all()
+    sizes = ProductSize.objects.all()
+    uoms = ProductConfiguration._meta.get_field('uom').choices  # UoM choices from the model field
+
+    return render(request, 'proconf.html', {
+        'products': products,
+        'sizes': sizes,
+        'uoms': uoms
+    })
+
 
 # Product Configuration Update View
 def product_configuration_update(request, pk):
@@ -229,3 +281,127 @@ def product_configuration_update(request, pk):
     else:
         form = ProductConfigurationForm(instance=configuration)
     return render(request, 'product/product_configuration_form.html', {'form': form})
+
+def paper_configuration_list(request):
+    # Get all configurations
+    paper_configurations = PaperConfiguration.objects.select_related('product', 'size', 'paper_specification').all()  
+
+    # Active products
+    products = Product.objects.filter(status=True)  
+
+    # Active sizes
+    product_sizes = ProductSize.objects.filter(status=True)  
+
+    # Active specifications
+    paper_specifications = PaperSpecification.objects.filter(status=True)  
+
+    return render(request, 'paperconf.html', {
+        'paper_configurations': paper_configurations,
+        'products': products,
+        'product_sizes': product_sizes,
+        'paper_specifications': paper_specifications,
+    })
+
+def create_paper_configuration(request):
+    if request.method == 'POST':
+        product = request.POST.get('product')
+        size = request.POST.get('size')
+        
+        # Get the lists of paper specifications and max output quantities
+        paper_specifications = request.POST.getlist('paper_specification')
+        max_output_quantities = request.POST.getlist('max_output_quantity')
+
+        # Iterate through the details and save them
+        for i in range(len(paper_specifications)):
+            if paper_specifications[i]:  # Ensure the paper specification is selected
+                # Create and save the configuration instance
+                paper_configuration = PaperConfiguration(
+                    product_id=product,
+                    size_id=size,
+                    paper_specification_id=paper_specifications[i],
+                    max_output_quantity=max_output_quantities[i]  # Assign the quantity
+                )
+                paper_configuration.save()
+
+        return redirect('paper_configuration_list')
+
+    else:
+        # If not POST, create empty form
+        products = Product.objects.filter(status=True)
+        product_sizes = ProductSize.objects.filter(status=True)
+        paper_specifications = PaperSpecification.objects.filter(status=True)
+
+        return render(request, 'paperconf.html', {
+            'products': products,
+            'product_sizes': product_sizes,
+            'paper_specifications': paper_specifications,
+        })
+    
+
+def substrate_configuration_list(request):
+    # Fetch all substrate configurations
+    substrate_configurations = SubstrateConfiguration.objects.all()
+
+    # Fetch related models to display
+    substrates = Substrate.objects.filter(status=True)  # Only active substrates
+    substrate_sizes = SubstrateSize.objects.filter(status=True)  # Only active sizes
+    substrate_thicknesses = SubstrateThickness.objects.filter(status=True)  # Only active thicknesses
+    paper_sizes = PaperSpecification.objects.filter(status=True)  # Only active paper sizes
+    print(paper_sizes)
+
+    return render(request, 'subconf.html', {
+        'substrate_configurations': substrate_configurations,
+        'substrates': substrates,
+        'substrate_sizes': substrate_sizes,
+        'substrate_thicknesses': substrate_thicknesses,
+        'paper_sizes': paper_sizes,
+    })
+    
+def create_substrate_configuration(request):
+    if request.method == 'POST':
+        # Extract the main form data
+        substrate = request.POST.get('substrate')
+        substrate_size = request.POST.get('substrate_size')
+        substrate_thickness = request.POST.get('substrate_thickness')
+        paper_size = request.POST.get('paper_size')
+        
+        # Get the lists of cost per unit, maximum output, and total from the repeater
+        cost_per_units = request.POST.getlist('cost_per_unit')
+        maximum_outputs = request.POST.getlist('maximum_output')
+        totals = request.POST.getlist('total')
+
+        # Iterate through the details and save them
+        for i in range(len(cost_per_units)):
+            if cost_per_units[i]:  # Ensure the cost_per_unit is provided
+                # Create and save the configuration instance
+                substrate_configuration = SubstrateConfiguration(
+                    substrate_id=substrate,
+                    substrate_size_id=substrate_size,
+                    substrate_thickness_id=substrate_thickness,
+                    paper_size_id=paper_size,
+                    cost_per_unit=cost_per_units[i],  # Assign the cost per unit
+                    maximum_output=maximum_outputs[i],  # Assign the maximum output
+                    total=totals[i]  # Assign the total
+                )
+                substrate_configuration.save()
+
+        return redirect('substrate_configuration_list')
+
+    else:
+        # If GET, instantiate an empty form
+        form = SubstrateConfigurationForm()
+
+    # Fetch active records to display in the form
+    substrates = Substrate.objects.filter(status=True)  # Only active substrates
+    substrate_sizes = SubstrateSize.objects.filter(status=True)  # Only active sizes
+    substrate_thicknesses = SubstrateThickness.objects.filter(status=True)  # Only active thicknesses
+    paper_sizes = PaperSpecification.objects.filter(status=True)  # Only active paper sizes
+    print(paper_sizes)
+
+    return render(request, 'subconf.html', {
+        'form': form,
+        'substrates': substrates,
+        'substrate_sizes': substrate_sizes,
+        'substrate_thicknesses': substrate_thicknesses,
+        'paper_sizes': paper_sizes,
+    })
