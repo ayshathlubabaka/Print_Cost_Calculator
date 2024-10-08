@@ -11,13 +11,24 @@ def conf_settings(request):
     return render(request, 'settings.html')
 
 def new_calculation(request):
-    return render(request, 'new.html')
+    products = Product.objects.all()
+    product_sizes = ProductSize.objects.all()
+    paper_specifications = PaperSpecification.objects.all()
+    substrates = Substrate.objects.all()
+    substrate_sizes = SubstrateSize.objects.all()
+    substrate_thickness = SubstrateThickness.objects.all()
 
-def admin_calculation(request):
-    return render(request, 'admin_calculation.html')
+    context = {
+        'products': products,
+        'product_sizes': product_sizes,
+        'paper_specifications': paper_specifications,
+        'substrates': substrates,
+        'substrate_sizes': substrate_sizes,
+        'substrate_thickness': substrate_thickness,
+    }
 
-def user_calculation(request):
-    return render(request, 'user_calculation.html')
+    return render(request, 'new.html', context)
+
 
 def new_products(request):
     return render(request, 'products.html')

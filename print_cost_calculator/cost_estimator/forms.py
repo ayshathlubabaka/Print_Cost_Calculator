@@ -9,7 +9,7 @@ class SubstrateForm(forms.ModelForm):
 class SubstrateSizeForm(forms.ModelForm):
     class Meta:
         model = SubstrateSize
-        fields = ['width', 'height', 'status']  # Include status field to allow editing
+        fields = ['size', 'status']  # Include status field to allow editing
 
 class SubstrateThicknessForm(forms.ModelForm):
     class Meta:
@@ -31,7 +31,7 @@ class ProductForm(forms.ModelForm):
 class ProductSizeForm(forms.ModelForm):
     class Meta:
         model = ProductSize
-        fields = ['width', 'height', 'status']
+        fields = ['size', 'status']
 
 # Product Configuration Form
 class ProductConfigurationForm(forms.ModelForm):

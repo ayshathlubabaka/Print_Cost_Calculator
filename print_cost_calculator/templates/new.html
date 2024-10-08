@@ -26,26 +26,28 @@
 														<div class="col-sm-4">
 															<div class="form-floating mb-5">
 																<select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-																	<option selected>Business Card</option>
-																	<option value="1">Business Card</option>
-																	<option value="2">Trifold Brochure</option>
-																	<option value="3">A4 Flyer</option>
+																	<option selected>Select a product</option>
+																	{% for product in products %}
+																		<option value="{{ product.id }}">{{ product.name }}</option>
+																	{% endfor %}
 																</select>
 																<label for="floatingSelect">Product Name</label>
 															</div>
 														</div>
+														
 
 														<div class="col-sm-4">
 															<div class="form-floating mb-5">
 																<select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-																	<option selected>9 x 5.5</option>
-																	<option value="1">9 x 5.5</option>
-																	<option value="2">9.5 x 5.5</option>
-																	<option value="3">10.5 x 6.5</option>
+																	<option selected>Select a product size</option>
+																	{% for size in product_sizes %}
+																		<option value="{{ size.id }}">{{ size.name }}</option>
+																	{% endfor %}
 																</select>
 																<label for="floatingSelect">Product Size</label>
 															</div>
 														</div>
+														
 
 														<div class="col-sm-4">
 															<div class="form-floating mb-5">
@@ -57,39 +59,18 @@
 													</div>
 
 													<div class="row mb-5">
+														{% for specification in paper_specifications %}
 														<div class="col-sm-1 mb-2">
 															<div class="form-check">
-																<input class="form-check-input" type="radio" value="" id="flexCheckChecked1" name="radio2" checked="">
-																<label class="" for="flexCheckChecked1">
-																	A4
+																<input class="form-check-input" type="radio" value="{{ specification.id }}" id="flexCheck{{ specification.id }}" name="radio2" {% if forloop.first %}checked{% endif %}>
+																<label class="" for="flexCheck{{ specification.id }}">
+																	{{ specification.name }}
 																</label>
 															</div>
 														</div>
-														<div class="col-sm-1 mb-2">
-															<div class="form-check">
-																<input class="form-check-input" type="radio" value="" id="flexCheckDefault1" name="radio2">
-																<label class="" for="flexCheckDefault1">
-																	A3
-																</label>
-															</div>
-														</div>
-														<div class="col-sm-1 mb-2">
-															<div class="form-check">
-																<input class="form-check-input" type="radio" value="" id="flexCheckDefault1" name="radio2">
-																<label class="" for="flexCheckDefault1">
-																	A1
-																</label>
-															</div>
-														</div>
-														<div class="col-sm-1 mb-2">
-															<div class="form-check">
-																<input class="form-check-input" type="radio" value="" id="flexCheckDefault1" name="radio2">
-																<label class="" for="flexCheckDefault1">
-																	Custom
-																</label>
-															</div>
-														</div>
+														{% endfor %}
 													</div>
+													
 
 													<div class="row mb-5">
 														<div class="d-flex align-items-center">
@@ -107,26 +88,27 @@
 														<div class="col-sm-4">
 															<div class="form-floating mb-5">
 																<select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-																	<option selected>Art Matt 350 GSM</option>
-																	<option value="1">Ice Gold 285 GSM</option>
-																	<option value="2">Art Matt 350 GSM</option>
-																	<option value="3">Art Matt 300 GSM</option>
-																	<option value="4">Art Glossy 250 GSM</option>
-																	<option value="5">Art Glossy 150 GSM</option>
-																	<option value="6">Paper Sticker Matt</option>
+																	<option selected>Select a substrate</option>
+																	{% for substrate in substrates %}
+																		<option value="{{ substrate.id }}">{{ substrate.name }}</option>
+																	{% endfor %}
 																</select>
 																<label for="floatingSelect">Substrate</label>
 															</div>
 														</div>
+														
 														<div class="col-sm-4">
 															<div class="form-floating mb-5">
 																<select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-																	<option selected>70 x 100</option>
-																	<option value="1">70 x 100</option>
+																	<option selected>Select a substrate size</option>
+																	{% for size in substrate_sizes %}
+																		<option value="{{ size.id }}">{{ size.name }}</option>
+																	{% endfor %}
 																</select>
 																<label for="floatingSelect">Substrate Size</label>
 															</div>
 														</div>
+														
 														<div class="col-sm-4">
 															<div class="form-floating mb-5">
 																<input type="text" class="form-control" id="floatingInput" placeholder="Quantity" value="2"/>

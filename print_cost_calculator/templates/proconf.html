@@ -67,7 +67,7 @@
 																		<tr>
 																			<td>{{ forloop.counter }}</td> 
 																			<td>{{c.product}}</td>
-																			<td>{{c.uom}}</td>
+																			<td>{{c.get_uom_display}}</td>
 																			<td>{{c.min_order_quantity}}</td>
 																			<td><a href=""><i class="bi bi-eye text-info"></i></a></td>
 																			<td>
@@ -181,7 +181,7 @@
 																											<input class="form-check-input" type="checkbox" value="{{ size.id }}" id="sizeCheck{{ size.id }}" name="sizes" 
 																												{% if size in c.sizes.all %}checked{% endif %}>  <!-- Check if size is in the related sizes -->
 																											<label class="form-check-label" for="sizeCheck{{ size.id }}">
-																												{{ size.width }} x {{ size.height }}
+																												{{ size}}
 																											</label>
 																										</div>
 																									{% endfor %}
@@ -404,7 +404,7 @@
 										<div class="form-check form-check-custom form-check-solid me-3">
 											<input class="form-check-input" type="checkbox" name="sizes" value="{{ size.id }}" id="size_{{ size.id }}">
 											<label class="form-check-label" for="size_{{ size.id }}">
-												{{ size.width }} x {{ size.height }}
+												{{ size }}
 											</label>
 										</div>
 									{% endfor %}

@@ -63,7 +63,7 @@
 																		{% for s in sizes %}
 																		<tr>
 																			<td>{{ forloop.counter }}</td> 
-																			<td>{{s.width}} x {{s.height}}</td>																			
+																			<td>{{s.size}}</td>																			
 																			<td>
 																				{% if s.status %}
 																					<div class="badge badge-light-success">Active</div>
@@ -143,11 +143,9 @@
 																						<form method="post" action="{% url 'update_product_size' s.id %}">
 																							{% csrf_token %}
 																							<div class="mb-3">
-																								<label class="form-label">Size (Width x Height)</label>
+																								<label class="form-label">Size</label>
 																								<div class="d-flex">
-																									<input type="number" name="width" class="form-control me-2" placeholder="Width" aria-label="Width" value="{{ s.width }}" required>
-																									<span class="align-self-center">x</span>
-																									<input type="number" name="height" class="form-control ms-2" placeholder="Height" aria-label="Height" value="{{ s.height }}" required>
+																									<input type="text" name="size" class="form-control me-2" placeholder="Size" aria-label="Width" value="{{ s.size }}" required>
 																								</div>
 																							</div>
 																						
@@ -339,11 +337,9 @@
 							<!--end::Heading-->
 					
 							<div class="mb-3">
-								<label class="form-label">Size (Width x Height)</label>
+								<label class="form-label">Size</label>
 								<div class="d-flex">
-									<input type="number" name="width" class="form-control me-2" placeholder="Width" aria-label="Width" required>
-									<span class="align-self-center">x</span>
-									<input type="number" name="height" class="form-control ms-2" placeholder="Height" aria-label="Height" required>
+									<input type="text" name="size" class="form-control me-2" placeholder="Size" aria-label="Size" required>
 								</div>
 							</div>
 							<!--end::Textarea-->

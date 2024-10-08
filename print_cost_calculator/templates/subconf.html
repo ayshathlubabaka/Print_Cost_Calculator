@@ -66,7 +66,7 @@
 																		<tr>
 																			<td>{{ forloop.counter }}</td>  <!-- Sl No -->
 																			<td>{{ config.substrate.name }}</td>
-																			<td>{{ config.substrate_size.width }} x {{ config.substrate_size.height }} | {{ config.substrate_thickness.value }} GSM</td>
+																			<td>{{ config.substrate_size }} | {{ config.substrate_thickness.value }} GSM</td>
 																			<td>
 																				<a href="#" data-bs-toggle="modal" data-bs-target="#kt_viewsubconf{{ forloop.counter }}">
 																					<i class="bi bi-eye text-info"></i>
@@ -167,7 +167,7 @@
 																										<select name="substrate_size" class="form-select" aria-label="Select substrate_size">
 																											{% for size in substrate_sizes %}
 																											<option value="{{ size.id }}" {% if size.id == config.substrate_size.id %}selected{% endif %}>
-																												{{ size.width }} x {{ size.height }}
+																												{{ size }}
 																											</option>
 																											{% endfor %}
 																										</select>
@@ -418,7 +418,7 @@
                     <select name="substrate_size" class="form-select" aria-label="Select example">
                         <option>Select Size</option>
                         {% for size in substrate_sizes %}
-                            <option value="{{ size.id }}">{{ size.width }} x {{ size.height }}</option>
+                            <option value="{{ size.id }}">{{ size }}</option>
                         {% endfor %}
                     </select>
                 </div>

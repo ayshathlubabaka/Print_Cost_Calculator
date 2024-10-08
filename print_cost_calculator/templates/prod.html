@@ -65,7 +65,7 @@
 																		<tr>
 																			<td>{{ forloop.counter }}</td> 
 																			<td>{{p.name}}</td>
-																			<td>{{p.uom}}</td>
+																			<td>{{ p.get_uom_display }}</td>
 																			<td>
 																				{% if p.status %}
 																					<div class="badge badge-light-success">Active</div>

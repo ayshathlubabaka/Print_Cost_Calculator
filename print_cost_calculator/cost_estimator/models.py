@@ -21,12 +21,11 @@ class Substrate(models.Model):
 
 
 class SubstrateSize(models.Model):
-    width = models.PositiveIntegerField(verbose_name=_("Width (cm)"))
-    height = models.PositiveIntegerField(verbose_name=_("Height (cm)"))
+    size = models.CharField(max_length=50, verbose_name=_("Size"))  # Adjust max_length as needed
     status = models.BooleanField(default=True, verbose_name=_("Status"))  # Active or Inactive
 
     def __str__(self):
-        return f'{self.width} x {self.height}'
+        return self.size
 
 
 class SubstrateThickness(models.Model):
@@ -47,14 +46,12 @@ class Product(models.Model):
         return self.name
 
 
-# Product Size Master
 class ProductSize(models.Model):
-    width = models.PositiveIntegerField(verbose_name=_("Width (cm)"))
-    height = models.PositiveIntegerField(verbose_name=_("Height (cm)"))
+    size = models.CharField(max_length=50, verbose_name=_("Size"))  # Adjust max_length as needed
     status = models.BooleanField(default=True, verbose_name=_("Status"))  # Active or Inactive
 
     def __str__(self):
-        return f'{self.width} x {self.height}'
+        return self.size
 
 
 # Product Configuration Master
@@ -96,7 +93,6 @@ class SubstrateConfiguration(models.Model):
     total = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.BooleanField(default=True, verbose_name=_("Status"))  # Active or Inactive
 
-    def __str__(self):
-        return f"{self.substrate.name} - {self.substrate_size.width}x{self.substrate_size.height} cm - {self.substrate_thickness.value} GSM"
+    
 
 
