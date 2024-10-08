@@ -65,12 +65,8 @@ def create_user(request):
 def signin(request):
     if request.user.is_authenticated:
         user = request.user
-        if user.role == 'superuser':
-            return redirect('superuser_dashboard')  # Use redirect for better URL handling
-        elif user.role == 'admin':
-            return redirect('admin_dashboard')
-        else:
-            return redirect('user_dashboard')
+        if user:
+            return redirect('dashboard')  # Use redirect for better URL handling
 
     email = ""
     email_error = None
@@ -101,12 +97,8 @@ def signin(request):
                     login(request, user)
 
                     # Redirect users based on their role
-                    if user.role == 'superuser':
-                        return redirect('superuser_dashboard')
-                    elif user.role == 'admin':
-                        return redirect('admin_dashboard')
-                    else:
-                        return redirect('user_dashboard')
+                    if user:
+                        return redirect('dashboard')
                 else:
                     password_error = "Invalid email or password."
 
@@ -123,15 +115,9 @@ def signin(request):
     }
     return render(request, 'index.html', context)
 
-def user_dashboard(request):
-    return render(request, 'user_dashboard.html')
-
-def admin_dashboard(request):
-    return render(request, 'admin_dashboard.html')
-
-def superuser_dashboard(request):
-    return render(request, 'superuser_dashboard.html')
+def dashboard(request):
+    return render(request, 'dashboard.html')
 
 def signout(request):
     logout(request)  # Logs the user out
-    return render(request, 'index.html') 
+    return render(request, 'index.html')
