@@ -107,7 +107,7 @@
 										<!--end::User-->
 										<!--begin:Info-->
 										<div class="me-4">
-											<a href="../../demo43/dist/pages/user-profile/projects.html" class="text-dark text-hover-primary fs-6 fw-bold">Jacob Jones</a>
+											<a href="../../demo43/dist/pages/user-profile/projects.html" class="text-dark text-hover-primary fs-6 fw-bold">{{user.email}}</a>
 											<a href="../../demo43/dist/pages/user-profile/overview.html" class="text-gray-400 text-hover-primary fs-7 fw-bold d-block">@jacobjs</a>
 										</div>
 										<!--end:Info-->
@@ -131,7 +131,7 @@
 												<!--end::Avatar-->
 												<!--begin::Username-->
 												<div class="d-flex flex-column">
-													<div class="fw-bold d-flex align-items-center fs-5">Jacob Jones
+													<div class="fw-bold d-flex align-items-center fs-5">{{user.email}}
 													<span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">Pro</span></div>
 													<a href="#" class="fw-semibold text-muted text-hover-primary fs-7">@jacobjs</a>
 												</div>
@@ -360,7 +360,7 @@
 										</li>
 										<!--end::Item-->
 										<!--begin::Item-->
-										<li class="breadcrumb-item text-gray-700 fw-bold lh-1"><a href="dashboard.html">Home</a></li>
+										<li class="breadcrumb-item text-gray-700 fw-bold lh-1"><a href="{% url 'signin' %}">Home</a></li>
 										<!--end::Item-->
 									</ul>
 									<!--end::Breadcrumb-->

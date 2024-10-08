@@ -10,6 +10,24 @@ def home(request):
 def conf_settings(request):
     return render(request, 'settings.html')
 
+def new_calculation(request):
+    return render(request, 'new.html')
+
+def admin_calculation(request):
+    return render(request, 'admin_calculation.html')
+
+def user_calculation(request):
+    return render(request, 'user_calculation.html')
+
+def new_products(request):
+    return render(request, 'products.html')
+
+def new_product_sizes(request):
+    return render(request, 'sizes.html')
+
+def new_substrate(request):
+    return render(request, 'substrate.html')
+
 def create_substrate(request):
     if request.method == 'POST':
         form = SubstrateForm(request.POST)
@@ -197,8 +215,8 @@ def delete_paper_specification(request, id):
     paper_specification = get_object_or_404(PaperSpecification, id=id)
     
     # Check if the paper specification is used in PaperConfiguration or SubstrateConfiguration
-    is_used_in_paper_config = PaperConfiguration.objects.filter(specification=paper_specification).exists()
-    is_used_in_substrate_config = SubstrateConfiguration.objects.filter(paper_specification=paper_specification).exists()  # Adjust based on actual relations
+    is_used_in_paper_config = PaperConfiguration.objects.filter(paper_specification=paper_specification).exists()
+    is_used_in_substrate_config = SubstrateConfiguration.objects.filter(paper_size=paper_specification).exists()  # Adjust based on actual relations
 
     if is_used_in_paper_config or is_used_in_substrate_config:
         messages.error(request, 'This paper specification is in use and cannot be deleted.')
@@ -291,8 +309,8 @@ def delete_product_size(request, id):
     product_size = get_object_or_404(ProductSize, id=id)
     
     # Check if the product size is used in ProductConfiguration or PaperConfiguration
-    is_used_in_product_config = ProductConfiguration.objects.filter(product_size=product_size).exists()
-    is_used_in_paper_config = PaperConfiguration.objects.filter(product_size=product_size).exists()
+    is_used_in_product_config = ProductConfiguration.objects.filter(sizes__in=[product_size]).exists()
+    is_used_in_paper_config = PaperConfiguration.objects.filter(size=product_size).exists()
 
     if is_used_in_product_config or is_used_in_paper_config:
         messages.error(request, 'This product size is in use and cannot be deleted.')

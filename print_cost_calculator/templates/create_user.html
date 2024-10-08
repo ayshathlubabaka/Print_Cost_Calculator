@@ -1,0 +1,99 @@
+{% extends 'superuser_base.html' %}
+{% block content %}
+
+<!-- Begin::Col -->
+<div class="col-xxl-8 mb-5 mb-xl-10">
+    <!-- Begin::Form -->
+    <div class="card card-flush border-0">
+        <!-- Begin::Header -->
+        <div class="card-header pt-7">
+            <h3 class="card-title align-items-start flex-column">
+                <span class="card-label fs-3 fw-bold text-gray-800">Create User</span>
+            </h3>
+        </div>
+        <!-- End::Header -->
+
+        <!-- Begin::Body -->
+        <div class="card-body pt-0">
+            <form method="POST">
+                {% csrf_token %}
+
+                <!-- Email Field -->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-floating mb-5">
+                            <input type="email" class="form-control {% if email_error %}is-invalid{% endif %}" id="emailInput" placeholder="Email" name="email" value="{{ request.POST.email }}" required>
+                            <label for="emailInput">Email</label>
+                            {% if email_error %}
+                                <div class="invalid-feedback">
+                                    {{ email_error }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Password Field -->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-floating mb-5">
+                            <input type="password" class="form-control {% if password_error %}is-invalid{% endif %}" id="passwordInput" placeholder="Password" name="password" required>
+                            <label for="passwordInput">Password</label>
+                            {% if password_error %}
+                                <div class="invalid-feedback">
+                                    {{ password_error }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Roles Selection -->
+                <div class="row">
+                    <div class="col-sm-12 mb-5">
+                        <div class="form-floating">
+                            <select class="form-select {% if role_error %}is-invalid{% endif %}" id="floatingRoles" name="role" aria-label="Floating label select example">
+                                <option value="">Select Role</option>
+                                {% for value, label in role_choices.items %}
+                                    <option value="{{ value }}" {% if request.POST.role == value %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                            <label for="floatingRoles">User Role</label>
+                            {% if role_error %}
+                                <div class="invalid-feedback">
+                                    {{ role_error }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="row">
+                    <div class="col-sm-12 text-center">
+                        <button type="submit" class="btn btn-primary px-5">Create User</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- End::Body -->
+    </div>
+    <!-- End::Form -->
+</div>
+<!-- End::Col -->{% if messages %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            {% for message in messages %}
+                Swal.fire({
+                    title: 'Success!',
+                    text: '{{ message }}',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            {% endfor %}
+        });
+    </script>
+{% endif %}
+
+{% endblock %}
+

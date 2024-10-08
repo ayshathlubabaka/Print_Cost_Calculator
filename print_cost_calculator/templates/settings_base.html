@@ -126,7 +126,7 @@
 										<!--begin:Info-->
 										<div class="me-4">
 											<a href="#"
-												class="text-dark text-hover-primary fs-6 fw-bold">Jacob Jones</a>
+												class="text-dark text-hover-primary fs-6 fw-bold">{{user.email}}</a>
 											<a href="#"
 												class="text-gray-400 text-hover-primary fs-7 fw-bold d-block">@jacobjs</a>
 										</div>
@@ -155,7 +155,7 @@
 												<!--end::Avatar-->
 												<!--begin::Username-->
 												<div class="d-flex flex-column">
-													<div class="fw-bold d-flex align-items-center fs-5">Jacob Jones
+													<div class="fw-bold d-flex align-items-center fs-5">{{user.email}}
 														<span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">Pro</span>
 													</div>
 													<a href="#" class="fw-semibold text-muted text-hover-primary fs-7">@jacobjs</a>
@@ -397,13 +397,13 @@
 										<!--end::Menu item-->
 										<!--begin::Menu item-->
 										<div class="menu-item px-5 my-1">
-											<a href="#" class="menu-link px-5">Account
+											<a href="" class="menu-link px-5">Account
 												Settings</a>
 										</div>
 										<!--end::Menu item-->
 										<!--begin::Menu item-->
 										<div class="menu-item px-5">
-											<a href="#"
+											<a href="{% url 'signout' %}"
 												class="menu-link px-5">Sign Out</a>
 										</div>
 										<!--end::Menu item-->
@@ -454,7 +454,7 @@
 									<ul class="breadcrumb breadcrumb-separatorless fw-semibold mb-1 mb-lg-3 me-2">
 										<!--begin::Item-->
 										<li class="breadcrumb-item text-gray-700 fw-bold lh-1">
-											<a href="dashboard.html" class="text-white">
+											<a href="{% url 'signin' %}" class="text-white">
 												<i class="fonticon-home text-gray-700 fs-3"></i>
 											</a>
 										</li>

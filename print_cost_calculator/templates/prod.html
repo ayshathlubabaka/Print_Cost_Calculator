@@ -218,12 +218,15 @@
 																	
 																					
 																					<div class="text-center pt-10">
+																						<form action="{% url 'delete_product' p.id %}" method="POST" id="kt_modal_new_card_submit">
+																							{% csrf_token %}
 																						<button type="reset" id="kt_modal_new_card_cancel" class="btn btn-light me-3">Discard</button>
 																						<button type="submit" id="kt_modal_new_card_submit" class="btn btn-danger">
 																							<span class="indicator-label">Delete</span>
 																							<span class="indicator-progress">Please wait...
 																								<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
 																						</button>
+																						</form>
 																					</div>
 																				</div>
 																				<!--end::Modal body-->

@@ -47,11 +47,11 @@ def create_user(request):
             if not email_error and not password_error and not role_error:
                 user = CustomUser.objects.create_user(email=email, password=password, role=role)
                 messages.success(request, _("User created successfully!"))
-                return redirect('admin_dashboard')  # Redirect to admin dashboard or another appropriate page
+                return redirect('create_user')  # Redirect to admin dashboard or another appropriate page
 
         except Exception as e:
             messages.error(request, _('An unexpected error occurred. Please try again later.'))
-            print(f"Error during user creation: {e}")
+            print(f"Error during user creation: {e}")  # Log the actual exception message
 
     return render(request, 'create_user.html', {
         'email_error': email_error,
@@ -59,6 +59,7 @@ def create_user(request):
         'role_error': role_error,
         'role_choices': role_choices,  # Pass role choices to context
     })
+
 
 
 def signin(request):
